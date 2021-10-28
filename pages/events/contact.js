@@ -32,7 +32,7 @@ const Event = () => {
     AuthUser.id &&
       firebase
         .firestore()
-        .collection("events")
+        .collection("contact")
         .where( 'user', '==', AuthUser.id )
         .onSnapshot(
           snapshot => {
@@ -40,9 +40,9 @@ const Event = () => {
               snapshot.docs.map(
                 doc => {
                   return {
-                    eventID: doc.id,
-                    eventName: doc.data().name,
-                    eventDate: doc.data().date.toDate().toDateString()
+                    contactID: doc.id,
+                    contactName: doc.data().name,
+                    contactDate: doc.data().date.toDate().toDateString()
                   }
                 }
               )
@@ -53,10 +53,10 @@ const Event = () => {
 
   const sendData = () => {
     try {
-      // try to update doc
+     
       firebase
         .firestore()
-        .collection("events") // all users will share one collection
+        .collection("contact") 
         .add({
           name: inputName,
           date: firebase.firestore.Timestamp.fromDate( new Date(inputDate) ),
@@ -64,7 +64,7 @@ const Event = () => {
           user: AuthUser.id
         })
         .then(console.log('Data was successfully sent to cloud firestore!'));
-      // flush out the user-entered values in the input elements onscreen
+      
       setInputName('');
       setInputDate('');
 
@@ -77,7 +77,7 @@ const Event = () => {
     try {
       firebase
         .firestore()
-        .collection("events")
+        .collection("contact")
         .doc(t)
         .delete()
         .then(console.log('Data was successfully deleted!'));
@@ -94,11 +94,11 @@ const Event = () => {
       <Flex flexDir="column" maxW={800} align="center" justify="start" minH="100vh" m="auto" px={4} py={3}>
         <InputGroup>
           <InputLeftElement
-            pointerEvents="none"
+            pointerContact="none"
             children={<AddIcon color="gray.300" />}
           />
-          <Input type="text" value={inputName} onChange={(e) => setInputName(e.target.value)} placeholder="Event Title" />
-          <Input type="date" value={inputDate} onChange={(e) => setInputDate(e.target.value)} placeholder="Event Date" />
+          <Input type="text" value={inputName} onChange={(e) => setInputName(e.target.value)} placeholder="Contact Title" />
+          <Input type="date" value={inputDate} onChange={(e) => setInputDate(e.target.value)} placeholder="Contact Date" />
           <Button
             ml={2}
             onClick={() => sendData()}
@@ -122,13 +122,13 @@ const Event = () => {
                 <Flex align="center">
                   <Text fontSize="xl" mr={4}>{i + 1}.</Text>
                   <Text>
-                    <Link href={'/events/' + item.eventID}>
-                    {item.eventName}
+                    <Link href={'/events/' + item.contactID}>
+                    {item.contactName}
                     </Link>
                   </Text>
-                  <Text>... {item.eventDate}</Text>
+                  <Text>... {item.contactDate}</Text>
                 </Flex>
-                <IconButton onClick={() => deleteEvent(item.eventID)} icon={<DeleteIcon />} />
+                <IconButton onClick={() => deleteEvent(item.contactID)} icon={<DeleteIcon />} />
               </Flex>
             </React.Fragment>
           )
@@ -150,4 +150,4 @@ export const getServerSideProps = withAuthUserTokenSSR({
 export default withAuthUser({
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
   whenUnauthedBeforeInit: AuthAction.REDIRECT_TO_LOGIN,
-})(Event)
+})(Contact)

@@ -28,7 +28,7 @@ const SingleEvent = ({itemData}) => {
     try {
       console.log("sending!");
       
-      const docref = await firebase.firestore().collection("events").doc(itemData.id);
+      const docref = await firebase.firestore().collection("contact").doc(itemData.id);
       const doc = docref.get();
 
       if (!doc.empty) {
@@ -57,8 +57,8 @@ const SingleEvent = ({itemData}) => {
             pointerEvents="none"
             children={<AddIcon color="gray.300" />}
           />
-          <Input type="text" value={inputName} onChange={(e) => setInputName(e.target.value)} placeholder="Event Title" />
-          <Input type="text" value={inputDate} onChange={(e) => setInputDate(e.target.value)} placeholder="Event Date" />
+          <Input type="text" value={inputName} onChange={(e) => setInputName(e.target.value)} placeholder="Contact Title" />
+          <Input type="text" value={inputDate} onChange={(e) => setInputDate(e.target.value)} placeholder="Contact Date" />
           <Button
             ml={2}
             onClick={() => sendData()}
@@ -82,7 +82,7 @@ export const getServerSideProps = withAuthUserTokenSSR(
   async ({ AuthUser, params }) => {
     
     const db = getFirebaseAdmin().firestore();
-    const doc = await db.collection("events").doc(params.id).get();
+    const doc = await db.collection("contact").doc(params.id).get();
     let itemData;
     if (!doc.empty) {
    
@@ -110,4 +110,4 @@ export default withAuthUser(
     whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
     whenUnauthedBeforeInit: AuthAction.REDIRECT_TO_LOGIN
   }
-)(SingleEvent)
+)(SingleContact)
